@@ -1,5 +1,5 @@
 #coding=utf-8
-#author@shibin
+#author@alingse
 #2016.06.21
 
 
@@ -47,7 +47,6 @@ class hdfsCluster(object):
         """ 返回当前路径"""
         _uri = hdfs_schema + '{}:{}{}'.format(self.host,self.port,self._path)
         return _uri
-
 
 
 if __name__ == '__main__':
