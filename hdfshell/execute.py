@@ -3,47 +3,44 @@
 #2016.08.01
 
 from __future__ import print_function
-import subprocess
 from subprocess import PIPE
+import subprocess
+import os
 
-
-class executeCmd(object):
-
-    """ 用来执行 shell cmd"""
-
-    def __init__(self, executable='bash',shell=True):
-        self.executable = executable
-        self.shell = shell
-        self.child = None
-
-    def runcmd(self,command):
-        p = subprocess.Popen(command,
+def init(executable='bash',shell=True,cwd=None):
+    def runbox(command):
+        child = subprocess.Popen(command,
                     stdout=PIPE,
                     stderr=PIPE,
-                    executable=self.executable,
-                    shell=self.shell,
+                    executable=executable,
+                    shell=shell,
                     universal_newlines=True)
 
-        self.child = p
+        return child
 
-    def read(self):
-        if self.child == None:
-            return False,False
-        outdata,errdata = self.child.communicate()
-        return outdata,errdata
-    
-    def readline(self):
-        while self.child.poll() == None:
-            out = self.child.stdout.readline()
-            yield out
+    return runbox
 
-if __name__ == '__main__':
-    exe = executeCmd()
-    exe.runcmd('ls -lh')
-    out,_ = exe.read()
-    print(out)
-    exe.runcmd('sleep 1 && df -h && sleep 3 && ls -lh')
-    #out,_ = exe.read()
-    #print(out)
-    for line in exe.readline():
+def readline(child):
+    while child.poll() == None:
+        out = child.stdout.readline()
+        yield out
+
+
+if __name__ == '__main__':    
+    cwd = os.path.dirname(__file__)
+    runbox = init(cwd = cwd)
+
+    child = runbox('ls -lh')
+    print(child.communicate()[0])
+
+    child = runbox('df -h && sleep 1 && ls -lh && sleep 1 && df -h')
+    for line in readline(child):
         print(line,end = '')
+
+    while True:
+        command = raw_input('exe-sh$')
+        if command.strip() == 'exit':
+            break
+        child = runbox(command.strip())
+        for line in readline(child):
+            print(line,end = '')
