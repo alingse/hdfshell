@@ -2,12 +2,11 @@
 #author@alingse
 #2016.08.01
 
-from __future__ import print_function
+
 from subprocess import PIPE
 import subprocess
-import os
 
-def init(executable='bash',shell=True,cwd=None):
+def initEnv(executable='bash',shell=True,cwd=None):
     def runbox(command):
         child = subprocess.Popen(command,
                     stdout=PIPE,
@@ -26,9 +25,11 @@ def readline(child):
         yield out
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
+    from __future__ import print_function
+    import os
     cwd = os.path.dirname(__file__)
-    runbox = init(cwd = cwd)
+    runbox = initEnv(cwd = cwd)
 
     child = runbox('ls -lh')
     print(child.communicate()[0])
@@ -38,7 +39,7 @@ if __name__ == '__main__':
         print(line,end = '')
 
     while True:
-        command = raw_input('exe-sh$')
+        command = raw_input('box-sh$')
         if command.strip() == 'exit':
             break
         child = runbox(command.strip())
