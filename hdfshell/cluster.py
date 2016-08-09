@@ -10,10 +10,11 @@ file_schema = 'file://'
 class hdfsCluster(object):
     """ 一个hdfs 资源 hdfs uri,path,账户密码认证
     """
-    def __init__(self,host,port):
+    def __init__(self,host,port,schema=hdfs_schema):
         """ 目前只需要host和port """
         self.host = host
         self.port = port
+        self.schema = schema
         self._path = '/'
         self._status = None
     
@@ -39,13 +40,13 @@ class hdfsCluster(object):
     @property
     def uri_head(self):
         """ 返回 uri 的 head"""
-        head = hdfs_schema + '{}:{}'.format(self.host,self.port)
+        head = self.schema + '{}:{}'.format(self.host,self.port)
         return head
 
     @property
     def uri(self):
         """ 返回当前路径"""
-        _uri = hdfs_schema + '{}:{}{}'.format(self.host,self.port,self._path)
+        _uri = self.schema + '{}:{}{}'.format(self.host,self.port,self._path)
         return _uri
 
 
