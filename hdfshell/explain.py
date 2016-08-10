@@ -1,47 +1,55 @@
 #coding=utf-8
 #author@alingse
-#2016.07.20
-
-from cluster import hdfs_schema
-from cluster import file_schema
+#2016.08.08
 
 import argparse
 
 
 class commandExplain(object):
-
-    def __init__(self,name,praser):
+    """docstring for command"""
+    def __init__(self, name, parser):
         self.name = name
-        self.parser = praser
+        self.parser = parser
 
-    def isValid(self,*args,**kwargs):
+    def isVaild(self,args):        
+        args = self.parser.parse_args(args)
+        return args
+
+    
+    
+class LS(commandExplain):
+    """ docstring for ls """
+    def __init__(self):
+        name = 'ls'
+        ls_parser = argparse.ArgumentParser()
+        ls_parser.add_argument('path', nargs='+', help='hdfs path')
+        
+        super(LS, self).__init__(name,ls_parser)
+
+    def translate(self,args,env):
+        cluster = env['cluster']
+        paths = []
+        if args == []:
+            uri = cluster.uri
+            paths.append(uri)
+
+        cmd = 'hadoop fs -{} '.format(self.name)+' '.join(paths)
+        return cmd
+
+
+
+class EXIT(commandExplain):
+    """ docstring for exit """
+    def __init__(self):
+        name = 'exit'
+        exit_parser = argparse.ArgumentParser()        
+        super(EXIT, self).__init__(name,exit_parser)
+
+    def translate(self,args,env):
         pass
 
-    def translate(self,*args,**kwargs):
-        pass
 
 
+ls = LS()
+exit = EXIT()
 
-
-class commandProxy(object):
-    """ 代理 命令 shell 命令 解释器"""
-    def __init__(self,hdfs):
-        self.hdfs = hdfs
-        self.explains = {}
-        self._head = 'hadoop fs '
-        self.lock = None
-
-    def add_explain(self,explain):
-        name = explain.name
-        if name in self.explains:
-            pass
-        self.explains[name] = explain
-
-    def remove_explain(self,name):
-        pass
-
-    def proxy(self,*args):
-        pass
-        #for exp in self.explains
-
-    def 

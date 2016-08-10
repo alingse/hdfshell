@@ -10,7 +10,7 @@ file_schema = 'file://'
 class hdfsCluster(object):
     """ 一个hdfs 资源 hdfs uri,path,账户密码认证
     """
-    def __init__(self,host,port,schema=hdfs_schema):
+    def __init__(self,host='localhost',port=9000,schema=hdfs_schema):
         """ 目前只需要host和port """
         self.host = host
         self.port = port
@@ -51,7 +51,7 @@ class hdfsCluster(object):
 
 
 if __name__ == '__main__':
-    hdfs = hdfsCluster('localhost','9200')
+    hdfs = hdfsCluster('localhost','9000')
     hdfs.path = '/hive/'
     print(hdfs.uri)
     print(hdfs.uri_head)
