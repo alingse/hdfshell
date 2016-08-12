@@ -19,6 +19,18 @@ def initRunEnv(executable='bash',shell=True,cwd=None):
 
     return runbox
 
+
+def readall(child):
+    out,err = child.communicate()
+    return (out,err)
+
+
+def readerr(child):
+    if child.poll() != 0:
+        err = child.stderr.read()
+        return err
+
+
 def readline(child):
     while child.poll() == None:
         out = child.stdout.readline()
@@ -36,3 +48,6 @@ if __name__ == '__main__':
     child = runbox('df -h && sleep 1 && ls -lh && sleep 1 && df -h')
     for line in readline(child):
         print(line,end = '')
+
+    child = runbox('sss dgdfd')
+    for line 
