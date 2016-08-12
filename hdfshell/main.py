@@ -11,6 +11,8 @@ from execute import readline,readerr,readall
 from explain import explainList
 from proxy import commandProxy
 
+from sys import stdout,stderr
+
 
 
 def hdfsh():
@@ -19,20 +21,21 @@ def hdfsh():
     
     env = {}
     env['cluster'] = hdfsCluster('hadoop70')
-    
+
     proxyer = commandProxy(explainList,env)
 
     while True:
         command = raw_input('box-sh$')
         
-        cmd = proxyer.translate(command,env)
-
-        if cmd == None:
+        status,cmd = proxyer.translate(command)
+        if status == None:
             continue
-
-        if cmd == False:
-            print('this command not in ',command)
+        if status == False:
+            _err = cmd
+            print(_err)
             continue
+        if status == 'EXIT':
+            exit(int(cmd))
 
         child = runbox(cmd)
         if proxyer.explainer.lineable :
@@ -40,11 +43,11 @@ def hdfsh():
                 print(line,end = '')
             if child.poll() != 0:
                 err = readerr(child)
-                sys.stderr.write(err)
+                stderr.write(err)
         else:
             out,err = readall(child)
-            sys.stdout.write(out)
-            sys.stderr.write(err)
+            stdout.write(out)
+            stderr.write(err)
 
 if __name__ == '__main__':
     hdfsh()

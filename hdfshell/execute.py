@@ -42,8 +42,14 @@ if __name__ == '__main__':
     cwd = os.path.dirname(__file__)
     runbox = initRunEnv(cwd = cwd)
 
+
     child = runbox('ls -lh')
-    print(child.communicate()[0])
+    out,err = readall(child)
+    print(out)
+
+    child = runbox('exit')
+    out,err = readall(child)
+    print('out-exit',out)
 
     child = runbox('df -h && sleep 1 && ls -lh && sleep 1 && df -h')
     for line in readline(child):

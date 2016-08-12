@@ -36,7 +36,7 @@ class LS(commandExplain):
             paths.append(uri)
 
         cmd = 'hadoop fs -{} '.format(self.name)+' '.join(paths)
-        return cmd
+        return True,cmd
 
     def tranline(self,line):
         pass
@@ -72,11 +72,18 @@ class EXIT(commandExplain):
     """ docstring for exit """
     def __init__(self):
         name = 'exit'
-        parser = argparse.ArgumentParser()        
+        parser = argparse.ArgumentParser()
+        parser.add_argument('status',nargs='?',default=0,type=int,help='status must be int')
         super(EXIT, self).__init__(name,parser)
 
     def translate(self,args,env):
-        pass
+        try:
+            _args = self.parser.parse_args(args)
+        except Exception as e:
+            return False,str(e).split('\n')[-1]
+        #for exit
+        return 'EXIT',_args.status
+
 
     def tranline(self,line):
         pass

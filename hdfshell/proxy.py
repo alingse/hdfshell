@@ -26,16 +26,14 @@ class commandProxy(object):
             head = args.pop(0)
 
         if head not in self.explainDict:
-            return False
+            return False,'this command not in '+ head
 
         _explain = self.explainDict[head]
-        cmd = _explain.translate(args,self.env)
-        if cmd == False:
-            return False
-
-        self.explainer = _explain
-        self.cmdList.append(command)
-        return cmd
+        status,cmd = _explain.translate(args,self.env)
+        if status != False:
+            self.explainer = _explain
+            self.cmdList.append(command)
+        return status,cmd
 
     def readout(self,lines):
         if self._explain == None or self._env == None:
