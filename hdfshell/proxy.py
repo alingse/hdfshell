@@ -2,20 +2,10 @@
 #author@alingse
 #2016.07.20
 
-from cluster import hdfs_schema
-from cluster import file_schema
+#from cluster import hdfs_schema
+#from cluster import file_schema
 
 import shlex
-
-from explain import ls,exit,enter
-
-
-
-explainList = []
-explainList.append(ls)
-explainList.append(exit)
-explainList.append(enter)
-
 
 class commandProxy(object):
 
@@ -52,5 +42,3 @@ class commandProxy(object):
             raise Exception('no status')
         out = self._explain.readout(lines)
         return out
-
-proxyer = commandProxy(explainList)
