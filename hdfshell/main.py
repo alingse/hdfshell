@@ -17,7 +17,7 @@ from sys import stdout,stderr
 
 def hdfsh():
 
-    runbox = initRunEnv()
+    runbox = initRunEnv(debug=True)
     
     env = {}
     env['cluster'] = hdfsCluster('hadoop70')
@@ -30,10 +30,12 @@ def hdfsh():
         status,cmd = proxyer.translate(command)
         if status == None:
             continue
+
         if status == False:
             _err = cmd
             print(_err)
             continue
+
         if status == 'EXIT':
             n = int(cmd)
             exit(n)

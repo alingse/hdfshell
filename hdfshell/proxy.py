@@ -2,8 +2,6 @@
 #author@alingse
 #2016.07.20
 
-#from cluster import hdfs_schema
-#from cluster import file_schema
 
 import shlex
 

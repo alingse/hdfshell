@@ -6,8 +6,10 @@ from __future__ import print_function
 from subprocess import PIPE
 import subprocess
 
-def initRunEnv(executable='bash',shell=True,cwd=None):
+def initRunEnv(executable='bash',shell=True,cwd=None,debug=False):
     def runbox(command):
+        if debug:
+            print(command)
         child = subprocess.Popen(command,
                     stdout=PIPE,
                     stderr=PIPE,
@@ -47,9 +49,9 @@ if __name__ == '__main__':
     out,err = readall(child)
     print(out)
 
-    child = runbox('exit')
+    child = runbox('ls s\ t.txt')
     out,err = readall(child)
-    print('out-exit',out)
+    print(out)
 
     child = runbox('df -h && sleep 1 && ls -lh && sleep 1 && df -h')
     for line in readline(child):
