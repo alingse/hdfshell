@@ -84,7 +84,6 @@ class EXIT(commandExplain):
         #for exit
         return 'EXIT',_args.status
 
-
     def tranline(self,line):
         pass
 

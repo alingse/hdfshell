@@ -35,7 +35,8 @@ def hdfsh():
             print(_err)
             continue
         if status == 'EXIT':
-            exit(int(cmd))
+            n = int(cmd)
+            exit(n)
 
         child = runbox(cmd)
         if proxyer.explainer.lineable :
