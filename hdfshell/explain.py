@@ -92,4 +92,9 @@ ls = LS()
 exit = EXIT()
 enter = Enter()
 
+explainList = []
+explainList.append(ls)
+explainList.append(exit)
+explainList.append(enter)
+
 
