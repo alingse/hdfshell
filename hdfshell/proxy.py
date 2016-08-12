@@ -7,40 +7,43 @@ from cluster import file_schema
 
 import shlex
 
-from explain import ls,exit
+from explain import ls,exit,enter
 
 
 
 explainList = []
 explainList.append(ls)
 explainList.append(exit)
-
+explainList.append(enter)
 
 
 class commandProxy(object):
 
-    def __init__(self,explains):
+    def __init__(self,explains,env):
         self.explainDict = {}
         for _explain in explains:
             self.explainDict[_explain.name] = _explain
+        self.env = env
         #run time
-        self._explain = None
-        self._env = None
-        
+        self.explainer = None
         #h
         self.cmdList = []
 
-    def translate(self,command,env):
+    def translate(self,command):
         args = shlex.split(command)
-        if args == []:
-            return None
-        head = args.pop(0)
+        head = ''
+        if args != []:
+            head = args.pop(0)
+
         if head not in self.explainDict:
             return False
+
         _explain = self.explainDict[head]
-        cmd = _explain.translate(args,env)
-        self._explain = _explain
-        self._env = env
+        cmd = _explain.translate(args,self.env)
+        if cmd == False:
+            return False
+
+        self.explainer = _explain
         self.cmdList.append(command)
         return cmd
 
