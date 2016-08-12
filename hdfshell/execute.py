@@ -50,4 +50,7 @@ if __name__ == '__main__':
         print(line,end = '')
 
     child = runbox('sss dgdfd')
-    for line 
+    for line in readline(child):
+        print(line,end = '')
+    err = readerr(child)
+    print('err',err)
