@@ -2,7 +2,9 @@
 #author@alingse
 #2016.08.08
 
+from cluster import hdfs_schema,file_schema
 import argparse
+
 
 
 class commandExplain(object):
@@ -11,6 +13,11 @@ class commandExplain(object):
         self.name = name
         self.parser = parser
         self.lineable = lineable
+
+    @property
+    def head(self):
+        return 'hadoop fs -{} '.format(self.name)
+
 
     def isVaild(self,args):
         pass
@@ -24,18 +31,32 @@ class LS(commandExplain):
     def __init__(self):
         name = 'ls'
         parser = argparse.ArgumentParser()
-        parser.add_argument('path', nargs='+', help='hdfs path')
-        
+        parser.add_argument('paths', nargs='*', help='hdfs path')        
         super(LS, self).__init__(name,parser,lineable=True)
 
     def translate(self,args,env):
         cluster = env['cluster']
+        uri = cluster.uri
+        uri_head = cluster.uri_head
+
+        _args = self.parser.parse_args(args)
+
         paths = []
-        if args == []:
-            uri = cluster.uri
+        for path in _args.paths:
+            if path.startswith('/'):
+                paths.append(uri_head+path)
+            elif path.startswith(hdfs_schema):
+                paths.append(path)
+            elif path.startswith(file_schema):
+                paths.append(path)
+            else:
+                paths.append(uri+path)
+        if paths == []:
             paths.append(uri)
 
-        cmd = 'hadoop fs -{} '.format(self.name)+' '.join(paths)
+        quote = lambda p:"'{}'".format(p)
+        paths = map(quote,paths)
+        cmd = self.head + ' '.join(paths)
         return True,cmd
 
     def tranline(self,line):
@@ -102,5 +123,3 @@ explainList = []
 explainList.append(ls)
 explainList.append(exit)
 explainList.append(enter)
-
-
